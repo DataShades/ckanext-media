@@ -1,0 +1,29 @@
+{% extends 'media/create.html' %}
+
+{% block save %}
+    <a class="btn btn-secondary" href="{{ h.url_for('media.list') }}">{{ _('Cancel') }}</a>
+    <button class="btn btn-primary" type="submit">{{ _('Update') }}</button>
+{% endblock %}
+
+{% block title %}
+    {{ _("Update Media") }}
+{% endblock %}
+
+{% block breadcrumb_content %}
+    {{ super() }}
+    <li><a href="{{ h.url_for('media.edit', type=type, id=id) }}">{{ _("Update Media") }}</a></li>
+{% endblock %}
+
+{% block media_actions %}
+    <div class="d-flex justify-content-end">
+        <a class="btn btn-outline-primary me-2" href="{{ h.url_for('media.list') }}">
+            {{ _("Back") }}
+        </a>
+        <a class="btn btn-primary me-2" href="{{ h.url_for('media.read', type=type, id=id) }}">
+            {{ _("View") }}
+        </a>
+        <a class="btn btn-danger" href="{{ h.url_for('media.delete', type=type, id=id) }}">
+            {{ _("Delete") }}
+        </a>
+    </div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "media/page.html" %}
+
+{% import 'macros/form.html' as form %}
+
+{% block title %}
+    {{ _("Create Media") }}
+{% endblock %}
+
+{% block breadcrumb_content %}
+    {{ super() }}
+    <li><a href="{{ h.url_for('media.create', type=type) }}">{{ _("Create Media") }}</a></li>
+{% endblock %}
+
+{%- block content %}
+    {% block maintag %}<div class="main">{% endblock %}
+        <div id="content" class="container">
+            {% block main_content %}
+                {% block flash %}{{ super() }}{% endblock %}
+                {% block toolbar %}{{ super() }}{% endblock %}
+                <div class="media-wrapper">
+                    {% block primary %}
+                        <div class="module-content">
+                            {% block media_actions %}
+                            {% endblock %}
+                            <form action="" method="post" enctype="multipart/form-data">
+                                {{ form.input("title", label=_("Title"), value=form_data.title, classes=["control-medium"], is_required=True) }}
+    
+                                {{ form.input("key", label=_("Unique Key"), value=form_data.key, classes=["control-medium"]) }}
+
+                                <fieldset class="p-3 border rounded mb-4">
+                                    <input type="file" name="file_media-upload" />
+    
+                                    {{ form.input(
+                                        "file",
+                                        label=_("File"),
+                                        value=form_data.file,
+                                        classes=['control-medium'],
+                                        is_required=True
+                                        )
+                                    }}
+                                </fieldset>
+    
+                                {% block extra_fields %}
+                                {% endblock %}
+                                {% block save %}
+                                    <button class="btn btn-primary" type="submit">{{ _('Create') }}</button>
+                                {% endblock %}
+                            </form>
+                        </div>
+                    {% endblock %}
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+{% endblock -%}
+

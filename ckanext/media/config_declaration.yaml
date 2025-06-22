@@ -1,0 +1,6 @@
+version: 1
+groups:
+    - annotation: media configuration
+      options:
+          - key: ckanext.media.extra_types
+            type: list

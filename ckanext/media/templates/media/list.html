@@ -1,0 +1,139 @@
+{% extends "media/page.html" %}
+
+{% block title %}
+    {{ _("Media List") }}
+{% endblock %}
+
+{% block breadcrumb_content %}
+    {{ super() }}
+    <li><a href="{{ h.url_for('media.list') }}">{{ _("Media List") }}</a></li>
+{% endblock %}
+
+{%- block content %}
+    {% block maintag %}<div class="main">{% endblock %}
+    <div id="content" class="container">
+        {% block main_content %}
+            {% block flash %}{{ super() }}{% endblock %}
+            {% block toolbar %}{{ super() }}{% endblock %}
+        
+            <div class="media-wrapper">
+                {% block primary %}
+                <div class="module-content">
+                        <div class="d-flex justify-content-end mb-4">
+                            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#media-creation">
+                                {{ _("Create") }}
+                            </button>
+                            <div class="modal fade" id="media-creation" tabindex="-1" aria-labelledby="media-creation" aria-hidden="true">
+                                <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title">Create</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul>
+                                            {% for m_type, label in types.items() %}
+                                                <li class="mb-2">
+                                                    <a class="text-dark fw-bold fs-4" href="{{ h.url_for('media.create', type=m_type) }}">
+                                                        {{ label }}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form action="">
+                            <div class="input-group mb-3">
+                                <input aria-label="{{ _('Search') }}" id="q" type="text" class="form-control input-lg" name="q" value="{{ q }}" placeholder="{{ _('Search...') }}">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default btn-lg" type="submit" value="search" aria-label="Submit">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </form>
+
+                        <div class="d-flex justify-content-end mb-4">
+                            <form action="">
+                                <input type="hidden" name="q" value="{{ q }}">
+                                <label for="type">
+                                    {{ _('Type') }}
+                                </label>
+                                <select name="type" id="type" onchange="this.form.submit()">
+                                    <option value="">{{ _('All') }}</option>
+                                    {% for t, l in types.items() %}
+                                        <option value="{{ t }}" {% if t == type %}selected{% endif %}>{{ l }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+
+                        </div>
+
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">file</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Key</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Modified</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataset-agreement-table-body">
+                                {% for media in page.items %}
+                                    {% set url = h.uploaded_media_url(media.file) %}
+                                    <tr>
+                                        <td>
+                                            <a class="d-block text-center" href="{{ url }}" target="_blank">
+                                                {% if media.type == 'image' %}
+                                                    <div>
+                                                        <img src="{{ url }}" loading="lazy" alt="" height="50px">
+                                                    </div>
+                                                    <div class="">
+                                                        {{ media.file }}
+                                                    </div>
+                                                {% else %}
+                                                    <div class="fs-1">
+                                                        <i class="fas fa-file"></i>
+                                                    </div>
+                                                    <div>
+                                                        {{ media.file }}
+                                                    </div>
+                                                {% endif %}
+                                            </a>
+                                        </td>
+                                        <td>{{ media.id }}</td>
+                                        <td>{{ media.key }}</td>
+                                        <td>{{ media.title }}</td>
+                                        <td>{{ media.type }}</td>
+                                        <td>{{ h.render_datetime(media.modified, with_hours=True) }}</td>
+                                        <td>
+                                            <a class="btn btn-outline-primary me-2" href="{{ h.url_for('media.read', type=media.type, id=media.id) }}">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                            <a class="btn btn-outline-primary btn-cell-edit me-2" href="{{ h.url_for('media.edit', type=media.type, id=media.id) }}">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            <a class="btn btn-outline-danger btn-delete" href="{{ h.url_for('media.delete', type=media.type, id=media.id) }}">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        {{ page.pager(q=q, type=type) }}
+                    </div>
+                {% endblock %}
+            </div>
+        {% endblock %}
+        </div>
+    </div>
+{% endblock -%}

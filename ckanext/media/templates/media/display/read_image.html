@@ -1,0 +1,66 @@
+{% extends "media/page.html" %}
+
+{% block subtitle %}
+    {{ media.title }}
+{% endblock %}
+
+{% block breadcrumb_content %}
+    {{ super() }}
+    <li><a href="{{ h.url_for('media.read', type=type ,id=id) }}">{{ media.title }}</a></li>
+{% endblock %}
+
+{%- block content %}
+    {% block maintag %}<div class="main">{% endblock %}
+    <div id="content" class="media-{{ media.id }} media-type-{{ media.type }} container">
+        {% block main_content %}
+            {% block flash %}{{ super() }}{% endblock %}
+            {% block toolbar %}{{ super() }}{% endblock %}
+        
+            <div class="media-wrapper">
+                {% block primary %}
+                    <div class="module-content">
+                        {%- snippet 'media/snippets/read_actions.html', type=type, id=id %}
+                        {% set url = h.uploaded_media_url(media.file) %}
+                        <div class="text-center mb-4">
+                            <a href="{{ url }}" target="_blank">
+                                <img class="w-50 h-auto" src="{{ url }}" alt="">
+                            </a>
+                        </div>
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Key</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Modified</th>
+                                    <th scope="col">Created</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataset-agreement-table-body">
+                                <tr>
+                                    <td>{{ media.id }}</td>
+                                    <td>{{ media.key }}</td>
+                                    <td>{{ media.title }}</td>
+                                    <td>{{ media.type }}</td>
+                                    <td>{{ h.render_datetime(media.modified, with_hours=True) }}</td>
+                                    <td>{{ h.render_datetime(media.created, with_hours=True) }}</td>
+                                </tr>
+                            </tbody>
+                            
+                            {% if media.extras %}
+                                {% for field, value in media.extras.items() %}
+                                    <div class="mb-3">
+                                        <span>{{ field }}: </span>
+                                        <span>{{ value }}</span>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </table>
+                    </div>
+                {% endblock %}
+            </div>
+        {% endblock %}
+        </div>
+    </div>
+{% endblock -%}

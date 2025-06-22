@@ -7,8 +7,12 @@
 #     preload:
 #       - base/main
 
-# media-css:
-#   filter: cssrewrite
-#   output: ckanext-media/%(version)s-media.css
-#   contents:
-#     - css/media.css
+media-css:
+  filter: cssrewrite
+  output: ckanext-media/%(version)s-media.css
+  contents:  
+    - styles.css
+  extra:
+    preload:
+      - base/main
+      - base/ckan

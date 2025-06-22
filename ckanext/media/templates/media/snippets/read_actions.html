@@ -1,0 +1,10 @@
+{% if h.check_access('edit_media') %}
+    <div class="d-flex justify-content-end">
+        <a class="btn btn-outline-primary me-2" href="{{ h.url_for('media.list') }}">
+            {{ _("Back") }}
+        </a>
+        <a class="btn btn-primary" href="{{ h.url_for('media.edit', type=type, id=id) }}">
+            {{ _("Edit") }}
+        </a>
+    </div>
+{% endif %}

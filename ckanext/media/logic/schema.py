@@ -1,11 +1,44 @@
-import ckan.plugins.toolkit as tk
+from __future__ import annotations
+
+from typing import Any, Dict
+
+from ckan.logic.schema import validator_args
+
+Schema = Dict[str, Any]
 
 
-def media_get_sum():
-    not_empty = tk.get_validator("not_empty")
-    convert_int = tk.get_validator("convert_int")
+@validator_args
+def create_media(
+    not_empty,
+    unicode_safe,
+    ignore,
+    default,
+    upload_media_to_storage,
+) -> Schema:
 
     return {
-        "left": [not_empty, convert_int],
-        "right": [not_empty, convert_int]
+        "title": [not_empty, unicode_safe],
+        "type": [not_empty, unicode_safe],
+        "file": [not_empty, upload_media_to_storage],
+        "extras": [ignore, unicode_safe],
+        "key": [default(''), unicode_safe],
+    }
+
+
+@validator_args
+def update_media(
+    not_empty,
+    unicode_safe,
+    ignore,
+    default,
+    upload_media_to_storage,
+) -> Schema:
+
+    return {
+        "id": [not_empty],
+        "title": [not_empty, unicode_safe],
+        "type": [not_empty, unicode_safe],
+        "file": [not_empty, upload_media_to_storage],
+        "extras": [ignore, unicode_safe],
+        "key": [default(''), unicode_safe],
     }
