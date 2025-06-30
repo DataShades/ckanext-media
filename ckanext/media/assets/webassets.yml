@@ -1,11 +1,13 @@
-# media-js:
-#   filter: rjsmin
-#   output: ckanext-media/%(version)s-media.js
-#   contents:
-#     - js/media.js
-#   extra:
-#     preload:
-#       - base/main
+media-js:
+  filter: rjsmin
+  output: ckanext-media/%(version)s-media.js
+  contents:
+      - js/media-copy-text.js
+      - js/media-widget-copy.js
+      - js/media.js
+  extra:
+    preload:
+      - base/main
 
 media-css:
   filter: cssrewrite

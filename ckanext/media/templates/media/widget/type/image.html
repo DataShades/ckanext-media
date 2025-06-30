@@ -1,0 +1,15 @@
+{% set url = h.get_media_fileurl_by_filename(media.file) %}
+
+<div>
+    <button class="p-0 border-0 bg-transparent w-100" data-module="media-widget-copy" data-module-text="{{ media.file }}">
+        <img class="media-widget-image-item w-100 media-widget-item card-img-top" class="w-100" src="{{ url }}" alt="">
+    </button>
+    <div class="btn-group w-100" role="group">
+        <button title="ID" type="button" class="btn btn-outline-dark d-block rounded-0" data-module="media-widget-copy" data-module-text="{{ media.id }}">{{ media.id }}</button>
+        {% if media.key %}
+            <button title="Key" type="button" class="btn btn-outline-dark d-block rounded-0" data-module="media-widget-copy" data-module-text="{{ media.key }}">
+                {{ media.key }}
+            </button>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,9 @@
+<div class="btn-group-vertical w-100" role="group">
+    <button title="File" type="button" class="btn btn-outline-dark d-block rounded-0" data-module="media-widget-copy" data-module-text="{{ media.file }}">{{ media.file }}</button>
+    <button title="ID" type="button" class="btn btn-outline-dark d-block rounded-0" data-module="media-widget-copy" data-module-text="{{ media.id }}">{{ media.id }}</button>
+    {% if media.key %}
+        <button title="Key" type="button" class="btn btn-outline-dark d-block rounded-0" data-module="media-widget-copy" data-module-text="{{ media.key }}">
+            {{ media.key }}
+        </button>
+    {% endif %}  
+</div>

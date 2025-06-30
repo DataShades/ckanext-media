@@ -1,0 +1,9 @@
+<div>
+    <div class="row">
+        {% for media in medias %}
+            <div class="col-md-4 pb-3">
+                {% snippet template, media=media %}
+            </div>
+        {% endfor %}
+    </div>
+</div>

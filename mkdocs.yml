@@ -1,0 +1,25 @@
+site_name: ckanext-media
+site_url: https://datashades.github.io/ckanext-media/
+
+repo_url:  https://github.com/DataShades/ckanext-media
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Config Settings: config_settings.md
+  - Usage: usage.md
+
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

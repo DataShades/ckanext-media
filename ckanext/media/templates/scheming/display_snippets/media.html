@@ -1,0 +1,13 @@
+{% if data.get(field.field_name) %}
+    {% set media = h.find_media(data[field.field_name]) %}
+    {% if media %}
+        {% set url = h.get_media_fileurl_by_filename(media.file) %}
+        <a target="_blank" href="{{ url }}">
+            {% if field.uploaded_file_text %}
+                {{ field.uploaded_file_text }}
+            {% else %}
+                {{ data[field.field_name] }}
+            {% endif %}
+        </a>
+    {% endif %}
+{% endif %}

@@ -2,5 +2,18 @@ version: 1
 groups:
     - annotation: media configuration
       options:
-          - key: ckanext.media.extra_types
+          - key: ckan.upload.media.mimetypes
             type: list
+            default: image/png image/gif image/jpeg text/csv application/pdf application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/msword application/vnd.openxmlformats-officedocument.wordprocessingml.document application/zip application/json text/plain
+          - key: ckanext.media.file.max_filesize
+            type: int
+            default: 3
+          - key: ckanext.media.image.max_filesize
+            type: int
+            default: 3
+          - key: ckanext.media.image.allowed_mimetypes
+            type: list
+            default: image/png image/gif image/jpeg
+          - key: ckanext.media.file.allowed_mimetypes
+            type: list
+            default: text/csv application/pdf application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/msword application/vnd.openxmlformats-officedocument.wordprocessingml.document application/zip application/json text/plain

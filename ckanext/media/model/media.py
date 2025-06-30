@@ -79,5 +79,30 @@ class MediaModel(tk.BaseModel):
             created=self.created.isoformat(),
             modified=self.modified.isoformat(),
             extras=self.extras,  # type: ignore
-            key=self.key, # type: ignore
+            key=self.key,  # type: ignore
         )
+
+    @classmethod
+    def find_media(cls, value: str) -> Self | None:
+        try:
+            media = (
+                model.Session.query(MediaModel)
+                .filter(MediaModel.id == int(value))
+                .first()
+            )
+        except ValueError:
+            media = (
+                model.Session.query(MediaModel)
+                .filter(
+                    sa.or_(
+                        MediaModel.key == value,
+                        MediaModel.file == value,
+                    )
+                )
+                .first()
+            )
+
+        if media:
+            return media
+
+        return

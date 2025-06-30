@@ -11,9 +11,5 @@ import ckan.model as model
 @pytest.mark.usefixtures("with_plugins", "clean_db")
 def test_media_get_sum():
     user = factories.User()
-    context = {
-        "user": user["name"],
-        "model": model
-    }
-    assert test_helpers.call_auth(
-        "media_get_sum", context=context)
+    context = {"user": user["name"], "model": model}
+    assert test_helpers.call_auth("media_get_sum", context=context)

@@ -1,17 +1,18 @@
 """Add media table
 
 Revision ID: 8697e85f8e9f
-Revises: 
+Revises:
 Create Date: 2025-06-21 14:00:07.819807
 
 """
+
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 
 # revision identifiers, used by Alembic.
-revision = '8697e85f8e9f'
+revision = "8697e85f8e9f"
 down_revision = None
 branch_labels = None
 depends_on = None

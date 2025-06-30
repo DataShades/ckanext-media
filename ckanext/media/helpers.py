@@ -30,7 +30,19 @@ def guess_media_type_create_snippet(type):
         return default_path + "create.html"
 
 
-def uploaded_media_url(filename: str):
+def media_type_widget_template(type):
+    env = current_app.jinja_env
+    default_path = "media/widget/type/"
+
+    path = default_path + type + ".html"
+    try:
+        env.get_template(path)
+        return path
+    except TemplateNotFound:
+        return default_path + "default.html"
+
+
+def get_media_fileurl_by_filename(filename: str):
     return tk.get_action("get_media_uploaded_url")({}, {"filename": filename})
 
 
@@ -42,25 +54,28 @@ def get_media_by_key(key):
 
     media_dict = {key: value for key, value in media.dictize({}).items()}
 
-    media_dict['file_url'] = uploaded_media_url(
-        media_dict['file'])  # type: ignore
+    media_dict["file_url"] = get_media_fileurl_by_filename(media_dict["file"])  # type: ignore
 
     return media_dict
 
 
-def get_media_fielurl_by_key(key):
+def get_media_fileurl_by_key(key):
     media = MediaModel.get_by_key(key)
 
     if not media:
-        return {}
+        return ""
 
-    return uploaded_media_url(media.file)  # type: ignore
+    return get_media_fileurl_by_filename(media.file)  # type: ignore
 
 
-def get_media_fielurl_by_id(id):
+def get_media_fileurl_by_id(id):
     media = MediaModel.get_by_id(id)
-    
+
     if not media:
-        return {}
-    
-    return uploaded_media_url(media.file) # type: ignore
+        return ""
+
+    return get_media_fileurl_by_filename(media.file)  # type: ignore
+
+
+def find_media(value):
+    return MediaModel.find_media(value)

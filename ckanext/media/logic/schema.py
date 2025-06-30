@@ -14,6 +14,7 @@ def create_media(
     ignore,
     default,
     upload_media_to_storage,
+    media_key_is_unique,
 ) -> Schema:
 
     return {
@@ -21,7 +22,7 @@ def create_media(
         "type": [not_empty, unicode_safe],
         "file": [not_empty, upload_media_to_storage],
         "extras": [ignore, unicode_safe],
-        "key": [default(''), unicode_safe],
+        "key": [default(""), unicode_safe, media_key_is_unique],
     }
 
 
@@ -32,6 +33,7 @@ def update_media(
     ignore,
     default,
     upload_media_to_storage,
+    media_key_is_unique,
 ) -> Schema:
 
     return {
@@ -40,5 +42,5 @@ def update_media(
         "type": [not_empty, unicode_safe],
         "file": [not_empty, upload_media_to_storage],
         "extras": [ignore, unicode_safe],
-        "key": [default(''), unicode_safe],
+        "key": [default(""), unicode_safe, media_key_is_unique],
     }

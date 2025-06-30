@@ -20,7 +20,7 @@
                 {% block primary %}
                     <div class="module-content">
                         {%- snippet 'media/snippets/read_actions.html', type=type, id=id %}
-                        {% set url = h.uploaded_media_url(media.file) %}
+                        {% set url = h.get_media_fileurl_by_filename(media.file) %}
                         <div class="text-center mb-4">
                             <a href="{{ url }}" target="_blank">
                                 <img class="w-50 h-auto" src="{{ url }}" alt="">

@@ -1,0 +1,25 @@
+<button hx-get="/media-widget-list/{{ type }}" hx-target="#{{ id }}-media-modal-search" hx-trigger="click" type="button" class="btn btn-dark mt-2" data-bs-toggle="modal" data-bs-target="#{{ id }}-media-modal">
+    {% if button_text %}
+        {{ button_text }}
+    {% else %}
+        {{ 'Media Widget' }}
+    {% endif %}
+</button>   
+<div class="modal fade media-widget-wrapper" id="{{ id }}-media-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog media-modal-widget-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="{{ modal_label_id }}">Media widget</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="px-3">
+                <div class="input-group my-3">
+                    <input hx-post="/media-widget-search/{{ type }}" hx-trigger="input changed delay:500ms, keyup[key=='Enter']" hx-target="#{{ id }}-media-modal-search" aria-label="Search" type="search" class="form-control input-lg" name="search" placeholder="Search files...">
+                </div>    
+            </div>
+            <div id="{{ id }}-media-modal-search" class="media-modal-content p-3" data-modal-id="{{ id }}-media-modal" data-target="{{ field }}">
+                
+            </div>
+        </div>
+    </div>
+</div>

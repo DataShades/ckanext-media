@@ -1,17 +1,34 @@
+from typing import Any
+
 import ckan.plugins.toolkit as tk
+from ckan.common import _
+import ckan.plugins as p
 
-MEDIA_DEFAULT_TYPES = ["image|Image", "file|File"]
-MEDIA_EXTRA_TYPES = "ckanext.media.extra_types"
+from ckanext.media import interfaces
+
+ALLOWED_IMAGE_MIMETYPES = "ckanext.media.image.allowed_mimetypes"
+ALLOWED_FILE_MIMETYPES = "ckanext.media.file.allowed_mimetypes"
+
+IMAGE_MAX_FILESIZE = "ckanext.media.image.max_filesize"
+FILE_MAX_FILEZE = "ckanext.media.file.max_filesize"
 
 
-def media_get_types() -> dict[str, str]:
-    configs = [MEDIA_DEFAULT_TYPES, tk.config.get(MEDIA_EXTRA_TYPES)]
-    types = {}
-    for config in configs:
-        if config:
-            types = types | {
-            type_: label
-            for type_, label in (item.split('|') for item in config if config)
-            }
+def media_get_types() -> dict[str, Any]:
+    types = {
+        "image": {
+            "label": _("Image"),
+            "allowed_mimetypes": tk.config.get(ALLOWED_IMAGE_MIMETYPES),
+            "max_filesize": tk.config.get(IMAGE_MAX_FILESIZE),
+        },
+        "file": {
+            "label": _("File"),
+            "allowed_mimetypes": tk.config.get(ALLOWED_FILE_MIMETYPES),
+            "max_filesize": tk.config.get(FILE_MAX_FILEZE),
+        },
+    }
+
+    # additional types registration
+    for item in p.PluginImplementations(interfaces.IMedia):
+        item.media_types(types)
 
     return types

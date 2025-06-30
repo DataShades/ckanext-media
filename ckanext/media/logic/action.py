@@ -34,7 +34,7 @@ def create_media(context, data_dict):
 @validate(schema.update_media)
 def edit_media(context, data_dict):
     tk.check_access("edit_media", context, data_dict)
-    media = MediaModel.get_by_id(data_dict['id'])
+    media = MediaModel.get_by_id(data_dict["id"])
 
     if not media:
         raise logic.NotFound("No such Media.")
@@ -62,7 +62,7 @@ def delete_media(context: types.Context, data_dict: types.DataDict) -> bool:
     upload = uploader.get_uploader("media")
 
     try:
-        os.remove(os.path.join(upload.storage_path, filename)) # type: ignore
+        os.remove(os.path.join(upload.storage_path, filename))  # type: ignore
     except OSError:
         pass
 

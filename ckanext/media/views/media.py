@@ -19,10 +19,10 @@ ValidationError = logic.ValidationError
 media = Blueprint("media", __name__)
 
 BASE_FIELDS = [
-    'title',
-    'type',
-    'file',
-    'key',
+    "title",
+    "type",
+    "file",
+    "key",
 ]
 
 
@@ -41,7 +41,7 @@ class CreateView(MethodView):
             return tk.abort(404, "Page not found")
 
         types = config.media_get_types()
-        
+
         if type not in types:
             return tk.abort(404, "Page not found")
 
@@ -53,8 +53,6 @@ class CreateView(MethodView):
             )
         except dict_fns.DataError:
             return tk.base.abort(400, tk._("Integrity Error"))
-
-
 
         extra_vars = {
             "types": types,
@@ -73,7 +71,7 @@ class CreateView(MethodView):
             return tk.abort(404, "Page not found")
 
         types = config.media_get_types()
-        
+
         if type not in types:
             return tk.abort(404, "Page not found")
 
@@ -91,14 +89,14 @@ class CreateView(MethodView):
             if file.filename and len(correct_key) and correct_key[1] == "upload":
                 form_data[correct_key[0]] = file
 
-        form_data['extras'] = {}
-        form_data['type'] = type
+        form_data["extras"] = {}
+        form_data["type"] = type
 
         for field in form_data:
             if field == "extras":
                 continue
             if field not in BASE_FIELDS:
-                form_data['extras'][field] = form_data.pop(field)
+                form_data["extras"][field] = form_data.pop(field)
 
         try:
             tk.get_action("create_media")(make_context(), form_data)
@@ -137,15 +135,14 @@ class EditView(MethodView):
             },
         )
 
-
-    def post(self, type, id:str):
+    def post(self, type, id: str):
         try:
             tk.check_access("edit_media", make_context(), {})
         except tk.NotAuthorized:
             return tk.abort(404, "Page not found")
 
         types = config.media_get_types()
-        
+
         if type not in types:
             return tk.abort(404, "Page not found")
 
@@ -163,16 +160,16 @@ class EditView(MethodView):
             if file.filename and len(correct_key) and correct_key[1] == "upload":
                 form_data[correct_key[0]] = file
 
-        form_data['extras'] = {}
-        form_data['type'] = type
+        form_data["extras"] = {}
+        form_data["type"] = type
 
         for field in form_data:
             if field == "extras":
                 continue
             if field not in BASE_FIELDS:
-                form_data['extras'][field] = form_data.pop(field)
+                form_data["extras"][field] = form_data.pop(field)
 
-        form_data['id'] = id
+        form_data["id"] = id
 
         try:
             tk.get_action("edit_media")(make_context(), form_data)
@@ -211,28 +208,25 @@ class DeleteView(MethodView):
             },
         )
 
-
-    def post(self, type, id:str):
+    def post(self, type, id: str):
         try:
             tk.check_access("delete_media", make_context(), {})
         except tk.NotAuthorized:
             return tk.abort(404, "Page not found")
 
         types = config.media_get_types()
-        
+
         if type not in types:
             return tk.abort(404, "Page not found")
 
-        form_data = {
-            "id": id
-        }
+        form_data = {"id": id}
 
         try:
             tk.get_action("delete_media")(make_context(), form_data)
         except logic.ValidationError as e:
             tk.h.flash_error(e.error_summary)
             return tk.render(
-                'media/delete.html',
+                "media/delete.html",
                 extra_vars={"form_data": form_data, "errors": {}},
             )
 
@@ -268,7 +262,7 @@ class ReadView(MethodView):
 class ListView(MethodView):
     def get(self):
         types = config.media_get_types()
-        
+
         try:
             tk.check_access("create_media", make_context(), {})
         except tk.NotAuthorized:
@@ -284,13 +278,13 @@ class ListView(MethodView):
 
         if q:
             query = query.filter(
-               
                 or_(
                     MediaModel.title.ilike("%" + q.strip() + "%"),
-                     MediaModel.key.ilike("%" + q.strip() + "%")
+                    MediaModel.key.ilike("%" + q.strip() + "%"),
+                    MediaModel.file.ilike("%" + q.strip() + "%"),
                 )
             )
-        
+
         if type:
             query = query.filter_by(type=type)
 
@@ -316,6 +310,52 @@ class ListView(MethodView):
         extra_vars["types"] = types
 
         return tk.render("media/list.html", extra_vars=extra_vars)
+
+
+@media.route("/media-widget-list/<media_type>")
+def media_widget_list(media_type):
+
+    medias = (
+        model.Session.query(MediaModel)
+        .filter(MediaModel.type == media_type)
+        .order_by(MediaModel.modified.desc())
+        .limit(12)
+        .all()
+    )
+
+    template = tk.h.media_type_widget_template(media_type)
+    return tk.render(
+        "media/widget/media_modal_list.html",
+        extra_vars={"medias": medias, "template": template},
+    )
+
+
+@media.route("/media-widget-search/<media_type>", methods=["POST"])
+def media_widget_search(media_type):
+    try:
+        form_data = logic.clean_dict(
+            dict_fns.unflatten(logic.tuplize_dict(logic.parse_params(tk.request.form)))
+        )
+    except dict_fns.DataError:
+        return tk.base.abort(400, tk._("Integrity Error"))
+
+    search = form_data.get("search", "")
+
+    medias = model.Session.query(MediaModel).filter(MediaModel.type == media_type)
+    if search:
+        medias = medias.filter(
+            or_(
+                MediaModel.title.ilike("%" + search.strip() + "%"),
+                MediaModel.key.ilike("%" + search.strip() + "%"),
+                MediaModel.file.ilike("%" + search.strip() + "%"),
+            )
+        )
+
+    medias = medias.order_by(MediaModel.modified.desc()).limit(12).all()
+    return tk.render(
+        "media/widget/media_modal_list.html", extra_vars={"medias": medias}
+    )
+
 
 media.add_url_rule("/media/<type>/<id>", view_func=ReadView.as_view("read"))
 

@@ -7,3 +7,24 @@
     min-height: 300px;
     position: relative;
 }
+
+.media-widget-image-item {
+    object-fit: cover;
+    height: 130px;
+}
+
+.media-widget-file-item {
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.media-widget-wrapper {
+    .media-modal-widget-dialog {
+        max-width: 750px;
+    }
+}
+
+.media-widget-item {
+    /* cursor: pointer; */
+}
