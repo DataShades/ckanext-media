@@ -37,7 +37,15 @@ def upload_media_to_storage(key, data, errors, context):
                 "File with mimetype '{mime}' is not allowed.".format(mime=mimetype[0])
             )
 
-        upload = uploader.get_uploader("media")
+        id = data.get(("id",))
+        old_filename = None
+
+        if id:
+            media = MediaModel.get_by_id(id)
+            if media:
+                old_filename = str(media.file) if media.file else None
+
+        upload = uploader.get_uploader("media", old_filename)
         upload.update_data_dict(data, key, key, "clear_upload")
         upload.upload(type["max_filesize"] if type.get("max_filesize") else 3)
     except (tk.ValidationError, OSError) as e:
