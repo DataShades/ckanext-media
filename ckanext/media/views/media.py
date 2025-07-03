@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from flask import Blueprint
 from flask.views import MethodView
 from sqlalchemy import or_
@@ -357,9 +359,8 @@ def media_widget_search(media_type):
     )
 
 
-media.add_url_rule("/media/<type>/<id>", view_func=ReadView.as_view("read"))
-
+media.add_url_rule("/media/list", view_func=ListView.as_view("list"))
 media.add_url_rule("/media/<type>/create", view_func=CreateView.as_view("create"))
 media.add_url_rule("/media/<type>/edit/<id>", view_func=EditView.as_view("edit"))
 media.add_url_rule("/media/<type>/delete/<id>", view_func=DeleteView.as_view("delete"))
-media.add_url_rule("/media/list", view_func=ListView.as_view("list"))
+media.add_url_rule("/media/<type>/<id>", view_func=ReadView.as_view("read"))
