@@ -86,27 +86,13 @@
                                 </tr>
                             </thead>
                             <tbody id="dataset-agreement-table-body">
+                                {% set preview_templates = h.media_types_preview_templates() %}
                                 {% for media in page.items %}
                                     {% set url = h.get_media_fileurl_by_filename(media.file) %}
                                     <tr>
                                         <td class="position-relative">
-                                            <button class="btn btn-outline-primary position-absolute" data-module="media-copy-text" data-module-text="{{ url }}"><i class="far fa-copy"></i></button>
                                             <a class="d-block text-center" href="{{ url }}" target="_blank">
-                                                {% if media.type == 'image' %}
-                                                    <div>
-                                                        <img src="{{ url }}" loading="lazy" alt="" height="50px">
-                                                    </div>
-                                                    <div class="">
-                                                        {{ media.file }}
-                                                    </div>
-                                                {% else %}
-                                                    <div class="fs-1">
-                                                        <i class="fas fa-file"></i>
-                                                    </div>
-                                                    <div>
-                                                        {{ media.file }}
-                                                    </div>
-                                                {% endif %}
+                                                {% snippet preview_templates[media.type], id=media.id, filename=media.file, url=url %}
                                             </a>
                                         </td>
                                         <td>{{ media.id }}</td>
@@ -115,10 +101,11 @@
                                         <td>{{ media.type }}</td>
                                         <td>{{ h.render_datetime(media.modified, with_hours=True) }}</td>
                                         <td>
-                                            <a class="btn btn-outline-primary me-2" href="{{ h.url_for('media.read', type=media.type, id=media.id) }}">
+                                            <a class="btn btn-outline-primary" href="{{ h.url_for('media.read', type=media.type, id=media.id) }}">
                                                 <i class="fa fa-eye"></i>
                                             </a>
-                                            <a class="btn btn-outline-primary btn-cell-edit me-2" href="{{ h.url_for('media.edit', type=media.type, id=media.id) }}">
+                                            <button class="btn btn-outline-primary" data-module="media-copy-text" data-module-text="{{ url }}"><i class="far fa-copy"></i></button>
+                                            <a class="btn btn-outline-primary btn-cell-edit" href="{{ h.url_for('media.edit', type=media.type, id=media.id) }}">
                                                 <i class="fa fa-pencil"></i>
                                             </a>
                                             <a class="btn btn-outline-danger btn-delete" href="{{ h.url_for('media.delete', type=media.type, id=media.id) }}">

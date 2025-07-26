@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from flask import current_app
 from jinja2 import TemplateNotFound
+from markupsafe import Markup
 
 import ckan.plugins.toolkit as tk
 
 from ckanext.media.model.media import MediaModel
+from ckanext.media import config
 
 
 def guess_media_type_snippet(type):
@@ -32,6 +34,18 @@ def guess_media_type_create_snippet(type):
         return default_path + "create.html"
 
 
+def guess_media_type_preview_snippet(type):
+    env = current_app.jinja_env
+    default_path = "media/snippets/preview/"
+
+    path = default_path + "media_" + type + ".html"
+    try:
+        env.get_template(path)
+        return path
+    except TemplateNotFound:
+        return default_path + "media.html"
+
+
 def media_type_widget_template(type):
     env = current_app.jinja_env
     default_path = "media/widget/type/"
@@ -56,7 +70,8 @@ def get_media_by_key(key):
 
     media_dict = {key: value for key, value in media.dictize({}).items()}
 
-    media_dict["file_url"] = get_media_fileurl_by_filename(media_dict["file"])  # type: ignore
+    media_dict["file_url"] = get_media_fileurl_by_filename(
+        media_dict["file"])  # type: ignore
 
     return media_dict
 
@@ -81,3 +96,12 @@ def get_media_fileurl_by_id(id):
 
 def find_media(value):
     return MediaModel.find_media(value)
+
+
+def media_types_preview_templates():
+    media_types = config.media_get_types()
+
+    preview_templates = {
+        i: tk.h.guess_media_type_preview_snippet(i) for i in media_types}
+
+    return preview_templates
